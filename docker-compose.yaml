@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  afisha-service:
+    build: .
+    ports:
+      - "8082:8080"
+    environment:
+      AFISHA_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/afisha-service"
+      AFISHA_DATASOURCE_USERNAME: "postgres"
+      AFISHA_DATASOURCE_PASSWORD: "qwerty"
+    networks:
+      - afisha-service
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14.7-alpine
+    hostname: postgres
+    environment:
+      POSTGRES_DB: "afisha-service"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "qwerty"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - "./docker/pgdata:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d afisha-service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - afisha-service
+
+volumes:
+  scenarios-pg-data:
+    name: scenarios-pg-data
+
+networks:
+  afisha-service:

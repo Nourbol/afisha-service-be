@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: afisha-service
+
+  security:
+    token:
+      expire-after: 1h
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/liquibase-changelog.xml
+
+  datasource:
+    url: ${AFISHA_DATASOURCE_URL}
+    username: ${AFISHA_DATASOURCE_USERNAME}
+    password: ${AFISHA_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver

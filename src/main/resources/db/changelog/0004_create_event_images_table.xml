@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="nurbol.bektibay" id="0004">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="event_images"/>
+            </not>
+        </preConditions>
+        <createTable tableName="event_images">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true"
+                             nullable="false"
+                />
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="event_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_cover" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="event_images"
+                                 baseColumnNames="event_id"
+                                 constraintName="event_images_events_fk"
+                                 referencedTableName="events"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"
+        />
+        <addForeignKeyConstraint baseTableName="event_images"
+                                 baseColumnNames="image_id"
+                                 constraintName="event_images_images_fk"
+                                 referencedTableName="images"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"
+        />
+    </changeSet>
+</databaseChangeLog>
